@@ -1,7 +1,13 @@
-type Environment = {
-  message: string;
-};
+interface Environment {
+  apollo: {
+    introspection: boolean;
+    playground: boolean;
+  };
+}
 
 export const environment: Environment = {
-  message: (process.env.MESSAGE as string) || 'Test message',
+  apollo: {
+    introspection: process.env.APOLLO_INTROSPECTION === 'true',
+    playground: process.env.APOLLO_PLAYGROUND === 'true',
+  },
 };

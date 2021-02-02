@@ -2,6 +2,7 @@ frameworkVersion: ^2.16.1
 service: star-wars-graphql
 provider:
   name: aws
+  stage: dev
   runtime: nodejs12.x
   region: eu-central-1
   apiGateway:
@@ -18,12 +19,12 @@ functions:
           path: graphql
           method: post
           cors: true
-          private: true
+          private: ${self:custom.private.${self:custom.stage}}
       - http:
           path: graphql
           method: get
           cors: true
-          private: true
+          private: ${self:custom.private.${self:custom.stage}}
 plugins:
   - serverless-webpack
   - serverless-offline-dotenv
@@ -32,3 +33,7 @@ plugins:
 custom:
   webpack:
     includeModules: true
+  stage: ${opt:stage, self:provider.stage}
+  private:
+    prod: true
+    dev: false
