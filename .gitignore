@@ -69,8 +69,8 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
-.env.test
+.env.production
+.env.development
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -93,6 +93,7 @@ dist
 
 # Serverless directories
 .serverless/
+.build/
 
 # FuseBox cache
 .fusebox/
@@ -102,3 +103,6 @@ dist
 
 # TernJS port file
 .tern-port
+
+# WebPack files
+.webpack/
