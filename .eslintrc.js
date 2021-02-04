@@ -8,4 +8,5 @@ module.exports = {
     'prettier',
     'prettier/@typescript-eslint',
   ],
+  rules: { '@typescript-eslint/explicit-module-boundary-types': 'off' },
 };
