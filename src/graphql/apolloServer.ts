@@ -1,21 +1,19 @@
 import { ApolloServer } from 'apollo-server-lambda';
 
 import { environment } from '../environment';
-
 import { typeDefs } from './type-defs';
 import { resolvers } from './resolvers';
-import { CharactersAPI } from './dataSources/characters';
+import { Characters } from './dataSources/characters';
+import { db } from '../database';
 
-const apolloServer = new ApolloServer({
+export const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
   introspection: environment.apollo.introspection,
   playground: environment.apollo.playground,
   dataSources: () => {
     return {
-      charactersApi: new CharactersAPI(),
+      characters: new Characters(db.collection('characters')),
     };
   },
 });
-
-export const handler = apolloServer.createHandler();

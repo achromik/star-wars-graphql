@@ -1,19 +1,23 @@
-import { RESTDataSource } from 'apollo-datasource-rest';
+import { MongoDataSource } from 'apollo-datasource-mongodb';
+import { ObjectID } from 'mongodb';
 
-import { environment } from '../../environment';
 import { Id } from '../../types';
 
-export class CharactersAPI extends RESTDataSource {
-  constructor() {
-    super();
-    this.baseURL = environment.apiUrl;
-  }
+interface CharacterDocument {
+  _id: ObjectID;
+  name: string;
+}
 
+interface Context {
+  character: CharacterDocument;
+}
+
+export class Characters extends MongoDataSource<CharacterDocument, Context> {
   async getCharacters() {
-    return this.get('characters');
+    return this.collection.find({}).toArray();
   }
 
   async getCharacterById(id: Id) {
-    return this.get(`characters/${id}`);
+    return this.findOneById(id);
   }
 }

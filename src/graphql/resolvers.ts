@@ -9,14 +9,14 @@ export const resolvers: IResolvers = {
       _args,
       { dataSources }
     ): Promise<Character[]> => {
-      return dataSources.charactersApi.getCharacters();
+      return dataSources.characters.getCharacters();
     },
     getCharacter: async (
       _source,
       { id },
       { dataSources }
     ): Promise<Character> => {
-      return dataSources.charactersApi.getCharacterById(id);
+      return dataSources.characters.getCharacterById(id);
     },
   },
   Character: {
