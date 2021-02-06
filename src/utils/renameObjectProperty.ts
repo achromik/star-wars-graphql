@@ -11,6 +11,7 @@ export const renameObjectProperty = <
   newPropertyName: N
 ): Renamed<T, K, N> => {
   const { [propertyName]: propertyValue, ...rest } = object;
+
   return {
     ...rest,
     [newPropertyName]: propertyValue,

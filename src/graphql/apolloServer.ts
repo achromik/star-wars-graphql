@@ -11,9 +11,7 @@ export const apolloServer = new ApolloServer({
   resolvers,
   introspection: environment.apollo.introspection,
   playground: environment.apollo.playground,
-  dataSources: () => {
-    return {
-      characters: new Characters(db.collection('characters')),
-    };
-  },
+  dataSources: () => ({
+    characters: new Characters(db.collection('characters')),
+  }),
 });

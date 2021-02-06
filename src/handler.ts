@@ -26,12 +26,12 @@ export const main: Handler<APIGatewayProxyEvent, APIGatewayProxyResult> = (
       console.log('Creating handler...');
       apolloServer.createHandler()(event, context, callback);
     })
-    .catch((err) => {
+    .catch((err: Error) => {
       if (environment.logStackTrace) {
         console.error(err);
       }
 
-      const errorMessage = `${err.name ? err.name + ': ' : ''}${err.message}`;
+      const errorMessage = `${err.name}: ${err.message}`;
       console.error(errorMessage);
       callback(null);
     });
