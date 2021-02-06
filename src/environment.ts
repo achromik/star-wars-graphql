@@ -1,4 +1,4 @@
-import { mongoURL } from './utils/mongoURL';
+import { mongoURL } from './utils';
 import { DbConfig, Environment } from './types';
 
 const databaseConfig: DbConfig = {

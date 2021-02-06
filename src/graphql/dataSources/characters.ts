@@ -1,23 +1,22 @@
 import { MongoDataSource } from 'apollo-datasource-mongodb';
-import { ObjectID } from 'mongodb';
 
-import { Id } from '../../types';
+import { Character, Id, CharacterDocument } from '../../types';
+import { renameId } from '../../utils';
 
-interface CharacterDocument {
-  _id: ObjectID;
-  name: string;
-}
+export class Characters extends MongoDataSource<CharacterDocument> {
+  async getCharacters(): Promise<Character[]> {
+    const response = await this.collection.find({}).toArray();
 
-interface Context {
-  character: CharacterDocument;
-}
-
-export class Characters extends MongoDataSource<CharacterDocument, Context> {
-  async getCharacters() {
-    return this.collection.find({}).toArray();
+    return response.map((item) => renameId<CharacterDocument, Character>(item));
   }
 
-  async getCharacterById(id: Id) {
-    return this.findOneById(id);
+  async getCharacterById(id: Id): Promise<Character | null> {
+    const response = await this.findOneById(id);
+
+    if (response?._id) {
+      return renameId<CharacterDocument, Character>(response);
+    }
+
+    return null;
   }
 }

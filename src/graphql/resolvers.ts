@@ -1,26 +1,21 @@
 import { IResolvers } from 'apollo-server-lambda';
+import { Id, Character, ResolversContext, ResolversSource } from '../types';
 
-import { Id, Character } from '../types';
-
-export const resolvers: IResolvers = {
+export const resolvers: IResolvers<ResolversSource, ResolversContext> = {
   Query: {
-    getCharacters: async (
-      _source,
-      _args,
-      { dataSources }
-    ): Promise<Character[]> => {
+    getCharacters: async (_, __, { dataSources }): Promise<Character[]> => {
       return dataSources.characters.getCharacters();
     },
     getCharacter: async (
-      _source,
-      { id },
+      _,
+      { id }: { id: Id },
       { dataSources }
-    ): Promise<Character> => {
+    ): Promise<Character | null | undefined> => {
       return dataSources.characters.getCharacterById(id);
     },
   },
   Character: {
-    planet: (parent): Id => {
+    planet: (parent: Character): Id | undefined => {
       return parent.planetId;
     },
   },

@@ -1,22 +1,41 @@
 import { ObjectId } from 'mongodb';
+import { Characters } from '../graphql/dataSources/characters';
 
 export type Id = string | ObjectId;
 
 export type Planet = {
   id: Id;
-  name?: string;
+  name: string;
 };
 
 export type Episode = {
   id: Id;
-  name?: string;
+  name: string;
 };
 
 export type Character = {
   id: Id;
-  name?: string;
+  name: string;
   episodes?: Array<Id>;
   planetId?: Id;
+};
+
+export type Document = Character | Planet | Episode;
+
+export type MongoDocument = CharacterDocument;
+
+export type CharacterDocument = {
+  _id: ObjectId;
+  name: string;
+  planetId: ObjectId;
+};
+
+export type ResolversSource = Character;
+
+export type ResolversContext = {
+  dataSources: {
+    characters: Characters;
+  };
 };
 
 export type Environment = {
@@ -37,3 +56,9 @@ export type DbConfig = {
   dbPassword: string;
   clusterUrl: string;
 };
+
+export type Renamed<
+  T,
+  K extends keyof T,
+  N extends string | number | symbol
+> = Pick<T, Exclude<keyof T, K>> & { [P in N]: T[K] };
