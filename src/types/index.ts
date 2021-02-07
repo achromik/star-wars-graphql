@@ -52,9 +52,9 @@ export type Environment = {
 
 export type DbConfig = {
   dbName: string;
-  dbUser: string;
-  dbPassword: string;
-  clusterUrl: string;
+  dbUrl: string;
+  dbUser?: string;
+  dbPassword?: string;
 };
 
 export type Renamed<
