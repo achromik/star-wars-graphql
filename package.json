@@ -8,15 +8,17 @@
     "email": "achromik@gmail.com"
   },
   "scripts": {
-    "debug": "SLS_DEBUG=* && node --inspect $(which serverless) offline",
+    "debug": "SLS_DEBUG=* node --inspect ./node_modules/.bin/serverless offline start",
     "deploy": "NODE_ENV=production SLS_DEBUG=* serverless deploy --stage prod",
-    "dev": "SLS_DEBUG=* serverless offline",
+    "dev": "serverless offline",
     "lint": "eslint . --ext .js,.ts",
-    "test:all": "jest",
-    "test": "jest --watch"
+    "lint:staged": "git diff --cached --name-only | grep '.ts$' | xargs eslint --max-warnings 0",
+    "test:all": "jest --collectCoverage=false",
+    "test": "jest --watch",
+    "mongo:dev": "env $(egrep -v -E '^(APOLLO|#)' .env.development | xargs) docker-compose up -d"
   },
   "pre-commit": [
-    "lint",
+    "lint:staged",
     "test:all"
   ],
   "dependencies": {
@@ -37,6 +39,7 @@
     "jest": "^26.6.3",
     "pre-commit": "^1.2.2",
     "prettier": "^2.2.1",
+    "serverless": "^2.22.0",
     "serverless-dotenv-plugin": "^3.1.0",
     "serverless-offline": "^6.8.0",
     "serverless-offline-dotenv": "^0.3.0",
