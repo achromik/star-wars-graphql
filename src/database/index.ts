@@ -1,24 +1,25 @@
 import { Db, MongoClient } from 'mongodb';
 
-import { environment } from '../environment';
-
 export let db: Db;
 
-export async function initDatabaseConnection(): Promise<Db> {
+export async function initDatabaseConnection(url: string): Promise<Db> {
   if (db) {
     return Promise.resolve(db);
   }
 
-  const URL = environment.mongo.url;
-
-  const client = new MongoClient(URL, {
+  const client = new MongoClient(url, {
     useUnifiedTopology: true,
     useNewUrlParser: true,
+    serverSelectionTimeoutMS: 600,
   });
 
-  await client.connect();
+  try {
+    await client.connect();
 
-  console.log('Connected to Mongo...');
-  db = client.db();
-  return Promise.resolve(db);
+    console.log('Connected to Mongo...');
+    db = client.db();
+    return Promise.resolve(db);
+  } catch (err: unknown) {
+    return Promise.reject(err);
+  }
 }

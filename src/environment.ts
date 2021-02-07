@@ -5,7 +5,7 @@ const databaseConfig: DbConfig = {
   dbName: process.env.DB_NAME || 'starWars',
   dbUser: process.env.DB_USER || '',
   dbPassword: process.env.DB_PASSWORD || '',
-  clusterUrl: process.env.MONGO_URL || 'localhost:27017',
+  dbUrl: process.env.MONGO_URL || 'localhost:27017',
 };
 
 export const environment: Environment = {
