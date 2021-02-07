@@ -8,33 +8,50 @@ db.createCollection('characters', { capped: false });
 db.createCollection('planets', { capped: false });
 db.createCollection('episodes', { capped: false });
 
+var date = new Date().toISOString()
+
 db.episodes.insert([
   {
     name: "NEWHOPE",
     fullName: "A New Hope",
-    episodeNo: 4
+    episodeNo: 4,
+    createdAt: date,
+    updatedAt: date,
+    __v: 1
   },
   {
     name: "EMPIRE",
     fullName: "The Empire Strikes Back",
-    episodeNo: 5
+    episodeNo: 5,
+    createdAt: date,
+    updatedAt: date,
+    __v: 1
   },
   {
-    name: "JEDI", f
-  ullName: "Return of the Jedi",
-    episodeNo: 6
+    name: "JEDI",
+    fullName: "Return of the Jedi",
+    episodeNo: 6,
+    createdAt: date,
+    updatedAt: date,
+    __v: 1
   },
 ]);
 
 db.planets.insert([
   {
     name: "Alderan",
-    population: "2B"
+    population: "2B",
+    createdAt: date,
+    updatedAt: date,
+    __v: 1
   },
   {
     name: "Naboo",
     moons: 3,
-    population: "4.5B"
+    population: "4.5B",
+    createdAt: date,
+    updatedAt: date,
+    __v: 1
   },
 ]);
 
@@ -49,32 +66,53 @@ var planetsIds = planets.map(item => item._id)
 db.characters.insert([
   {
     "name": "Luke Skywalker",
-    "episodes": episodesIds
+    episodesIds,
+    createdAt: date,
+    updatedAt: date,
+    __v: 1
   },
   {
     "name": "Darth Vader",
-    "episodes": episodesIds
+    episodesIds,
+    createdAt: date,
+    updatedAt: date,
+    __v: 1
   },
   {
     "name": "Han Solo",
-    "episodes": episodesIds
+    episodesIds,
+    createdAt: date,
+    updatedAt: date,
+    __v: 1
   },
   {
     "name": "Leia Organa",
-    "episodes": episodesIds,
-    "planet": planetsIds[0]
+    episodesIds,
+    "planetId": planetsIds[0],
+    createdAt: date,
+    updatedAt: date,
+    __v: 1
   },
   {
     "name": "Wilhuff Tarkin",
-    "episodes": [episodesIds[0]]
+    "episodesIds": [episodesIds[0]],
+    createdAt: date,
+    updatedAt: date,
+    __v: 1
   },
   {
     "name": "C-3PO",
-    "episodes": episodesIds
+    episodesIds,
+    createdAt: date,
+    updatedAt: date,
+    __v: 1
   },
   {
     "name": "R2-D2",
-    "episodes": episodesIds
+    episodesIds,
+    createdAt: date,
+    updatedAt: date,
+    __v: 1
   }
 ]);
 EOF
