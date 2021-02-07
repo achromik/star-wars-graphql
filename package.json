@@ -13,7 +13,7 @@
     "dev": "serverless offline",
     "lint": "eslint . --ext .js,.ts",
     "lint:staged": "git diff --cached --name-only | grep '.ts$' | xargs eslint --max-warnings 0",
-    "test:all": "jest --collectCoverage=false",
+    "test:all": "git diff --cached --name-only | grep '.ts$' | xargs jest --bail --findRelatedTests --collectCoverage=false --passWithNoTests",
     "test": "jest --watch",
     "mongo:dev": "env $(egrep -v -E '^(APOLLO|#)' .env.development | xargs) docker-compose up -d"
   },
