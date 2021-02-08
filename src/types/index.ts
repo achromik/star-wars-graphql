@@ -1,5 +1,4 @@
-import { ObjectId } from 'mongodb';
-import { Characters } from '../graphql/dataSources/characters';
+import mongoose from 'mongoose';
 
 export type Id = string | mongoose.Types.ObjectId;
 
@@ -13,6 +12,7 @@ export type Environment = {
   };
   isOffline: boolean;
   logStackTrace: boolean;
+  removeFields: string[];
 };
 
 export type DbConfig = {
@@ -22,6 +22,17 @@ export type DbConfig = {
   dbPassword?: string;
 };
 
+export interface CharacterDocument extends mongoose.Document {
+  name: string;
+  planetId: Id;
+}
+
 export interface PlanetDocument extends mongoose.Document {
   name: string;
 }
+
+export type TypeComposerOpts = {
+  fields?: {
+    remove?: string[];
+  };
+};

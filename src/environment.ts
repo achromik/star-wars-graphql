@@ -20,4 +20,5 @@ export const environment: Environment = {
   },
   isOffline: process.env.IS_OFFLINE?.toLowerCase() === 'true',
   logStackTrace: process.env.LOG_STACK_TRACE?.toLowerCase() === 'true',
+  removeFields: ['createdAt', 'updatedAt', '_id', '__v'],
 };
