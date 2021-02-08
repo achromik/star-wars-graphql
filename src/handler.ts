@@ -4,7 +4,6 @@ import {
   Handler,
 } from 'aws-lambda';
 import { ApolloError } from 'apollo-server-lambda';
-import { MongoError } from 'mongodb';
 
 import { initDatabaseConnection } from './database';
 import { apolloServer } from './graphql/apolloServer';
@@ -38,7 +37,7 @@ export const main: Handler<APIGatewayProxyEvent, APIGatewayProxyResult> = (
       const errorMessage = `${err.name}: ${err.message}`;
       console.error(errorMessage);
 
-      if (err instanceof MongoError) {
+      if (err.name.match(/mongoose/i)) {
         const error = new ApolloError(errorMessage, 'DB_CONNECTION_FAILED', {
           exception: { stacktrace: [err.stack?.split('\n')] },
         });

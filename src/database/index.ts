@@ -1,24 +1,20 @@
-import { Db, MongoClient } from 'mongodb';
+import mongoose from 'mongoose';
 
-export let db: Db;
+export let db: mongoose.Connection;
 
-export async function initDatabaseConnection(url: string): Promise<Db> {
-  if (db) {
-    return Promise.resolve(db);
-  }
-
-  const client = new MongoClient(url, {
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-    serverSelectionTimeoutMS: 600,
-  });
-
+export async function initDatabaseConnection(url: string): Promise<void> {
   try {
-    await client.connect();
+    await mongoose.connect(url, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useFindAndModify: false,
+      useCreateIndex: true,
+      connectTimeoutMS: 10000,
+    });
 
     console.log('Connected to Mongo...');
-    db = client.db();
-    return Promise.resolve(db);
+
+    return Promise.resolve();
   } catch (err: unknown) {
     return Promise.reject(err);
   }

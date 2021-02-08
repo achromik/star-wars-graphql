@@ -12,7 +12,7 @@
     "deploy": "NODE_ENV=production SLS_DEBUG=* serverless deploy --stage prod",
     "dev": "serverless offline",
     "lint": "eslint . --ext .js,.ts",
-    "lint:staged": "git diff --cached --name-only | grep '.ts$' | xargs eslint --max-warnings 0",
+    "lint:staged": "git diff --cached --name-only --diff-filter=AM | grep '.ts$' | xargs eslint --max-warnings 0",
     "test:all": "git diff --cached --name-only | grep '.ts$' | xargs jest --bail --findRelatedTests --collectCoverage=false --passWithNoTests",
     "test": "jest --watch",
     "mongo:dev": "env $(egrep -v -E '^(APOLLO|#)' .env.development | xargs) docker-compose up -d"

@@ -1,17 +1,16 @@
 import { ApolloServer } from 'apollo-server-lambda';
 
 import { environment } from '../environment';
-import { typeDefs } from './type-defs';
-import { resolvers } from './resolvers';
-import { Characters } from './dataSources/characters';
-import { db } from '../database';
+import { graphqlSchema } from './schema';
+import { Characters } from '../models/Characters';
+import { Planets } from '../models/Planets';
 
 export const apolloServer = new ApolloServer({
-  typeDefs,
-  resolvers,
+  schema: graphqlSchema,
   introspection: environment.apollo.introspection,
   playground: environment.apollo.playground,
-  dataSources: () => ({
-    characters: new Characters(db.collection('characters')),
+  context: () => ({
+    Characters,
+    Planets,
   }),
 });
