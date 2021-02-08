@@ -18,7 +18,10 @@ export const environment: Environment = {
   mongo: {
     url: mongoURL(databaseConfig),
   },
+  graphQL: {
+    removeFields: ['createdAt', 'updatedAt', '_id', '__v'],
+    pageSize: parseInt(process.env.PAGE_SIZE as string, 10) || undefined,
+  },
   isOffline: process.env.IS_OFFLINE?.toLowerCase() === 'true',
   logStackTrace: process.env.LOG_STACK_TRACE?.toLowerCase() === 'true',
-  removeFields: ['createdAt', 'updatedAt', '_id', '__v'],
 };
