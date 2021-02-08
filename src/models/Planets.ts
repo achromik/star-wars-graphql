@@ -1,6 +1,9 @@
 import { composeWithMongoose } from 'graphql-compose-mongoose';
 import mongoose, { Schema } from 'mongoose';
-import { PlanetDocument } from '../types';
+
+import { environment } from '../environment';
+import { PlanetDocument, TypeComposerOpts } from '../types';
+import { addIdField } from '../utils/addIdField';
 
 const planetSchema: mongoose.Schema = new Schema(
   {
@@ -19,8 +22,16 @@ export const Planets = mongoose.model<PlanetDocument>(
   'planets'
 );
 
-const customizationOptions = {};
+const customizationOptions: TypeComposerOpts = {
+  fields: {
+    remove: [...environment.removeFields],
+  },
+};
 export const PlanetsTC = composeWithMongoose(Planets, customizationOptions);
+
+PlanetsTC.addFields({
+  id: addIdField(),
+});
 
 export const planetQuery = {
   planetById: PlanetsTC.getResolver('findById'),
