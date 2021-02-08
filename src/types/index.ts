@@ -21,3 +21,7 @@ export type DbConfig = {
   dbUser?: string;
   dbPassword?: string;
 };
+
+export interface PlanetDocument extends mongoose.Document {
+  name: string;
+}
