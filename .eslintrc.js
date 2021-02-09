@@ -9,4 +9,7 @@ module.exports = {
     'prettier/@typescript-eslint',
   ],
   rules: { '@typescript-eslint/explicit-module-boundary-types': 'off' },
+  env: {
+    jest: true,
+  },
 };
