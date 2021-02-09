@@ -3,16 +3,25 @@ import mongoose from 'mongoose';
 export type Id = string | mongoose.Types.ObjectId;
 
 export type Environment = {
-  apollo: {
-    introspection: boolean;
-    playground: boolean;
-  };
-  mongo: {
-    url: string;
-  };
+  apollo: ApolloOpts;
+  mongo: MongoOpts;
+  graphQL: GraphQLOpts;
   isOffline: boolean;
   logStackTrace: boolean;
+};
+
+type ApolloOpts = {
+  introspection: boolean;
+  playground: boolean;
+};
+
+type MongoOpts = {
+  url: string;
+};
+
+type GraphQLOpts = {
   removeFields: string[];
+  pageSize?: number;
 };
 
 export type DbConfig = {
@@ -36,3 +45,10 @@ export type TypeComposerOpts = {
     remove?: string[];
   };
 };
+
+export type Context = {
+  Character: mongoose.Model<CharacterDocument>;
+  Planet: mongoose.Model<PlanetDocument>;
+};
+
+export type MutationArgs = CharacterInput
