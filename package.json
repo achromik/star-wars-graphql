@@ -29,6 +29,7 @@
     "graphql-compose": "^7.24.4",
     "graphql-compose-mongoose": "^9.0.1",
     "graphql-middleware": "^6.0.3",
+    "js-abbreviation-number": "^1.0.0",
     "mongoose": "^5.11.15",
     "yup": "^0.32.8"
   },

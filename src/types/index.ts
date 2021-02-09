@@ -36,6 +36,12 @@ export interface CharacterDocument extends mongoose.Document {
   planetId: Id;
 }
 
+export interface PlanetDocument extends mongoose.Document {
+  name: string;
+  population: number;
+  moons: number;
+}
+
 export type CharacterInput = { name: string; planetId?: Id };
 
 export interface PlanetDocument extends mongoose.Document {
@@ -53,4 +59,4 @@ export type Context = {
   Planet: mongoose.Model<PlanetDocument>;
 };
 
-export type MutationArgs = CharacterInput
+export type MutationArgs = CharacterInput;

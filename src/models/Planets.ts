@@ -1,5 +1,6 @@
 import { composeWithMongoose } from 'graphql-compose-mongoose';
 import mongoose, { Schema } from 'mongoose';
+import { abbreviateNumber } from 'js-abbreviation-number';
 
 import { environment } from '../environment';
 import { PlanetDocument, TypeComposerOpts } from '../types';
@@ -11,6 +12,14 @@ const planetSchema: mongoose.Schema = new Schema(
       type: String,
       required: true,
       trim: true,
+    },
+    moons: {
+      type: Number,
+      description: 'Numbers of moons',
+    },
+    population: {
+      type: Number,
+      description: 'Population',
     },
   },
   { timestamps: true }
@@ -30,8 +39,27 @@ const customizationOptions: TypeComposerOpts = {
 export const PlanetTC = composeWithMongoose(Planet, customizationOptions);
 
 PlanetTC.addFields({
-  id: idField(),
+  id: idField<PlanetDocument>(),
+  population: {
+    type: 'String',
+    resolve: (source: PlanetDocument) =>
+      abbreviateNumber(source.population ?? 0),
+    description: 'Population as short string',
+  },
+  populationValue: {
+    type: 'Float',
+    resolve: (source: PlanetDocument) => source.population,
+    description: 'Population as number',
+  },
 });
+
+PlanetTC.reorderFields([
+  'id',
+  'name',
+  'population',
+  'populationValue',
+  'moons',
+]);
 
 export const planetQuery = {
   planetById: PlanetTC.getResolver('findById'),

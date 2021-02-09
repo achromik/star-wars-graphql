@@ -6058,6 +6058,11 @@ jmespath@0.15.0:
   resolved "https://registry.yarnpkg.com/jmespath/-/jmespath-0.15.0.tgz#a3f222a9aae9f966f5d27c796510e28091764217"
   integrity sha1-o/Iiqarp+Wb10nx5ZRDigJF2Qhc=
 
+js-abbreviation-number@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/js-abbreviation-number/-/js-abbreviation-number-1.0.0.tgz#84560dd2c77dd60b491820b779b6d74b0f29fe18"
+  integrity sha512-RNy+y1ZoEyzzoceJ96FDSWouUZJKHZRWO2itm5cep2bXD8Yjq42sKC74JW1c+ZzZgwBfBEObirr8vPfeXoXWcQ==
+
 js-string-escape@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/js-string-escape/-/js-string-escape-1.0.1.tgz#e2625badbc0d67c7533e9edc1068c587ae4137ef"

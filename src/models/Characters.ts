@@ -66,7 +66,7 @@ CharacterTC.addRelation('planetData', {
 });
 
 CharacterTC.addFields({
-  id: idField(),
+  id: idField<CharacterDocument>(),
   planet: {
     type: 'String',
     resolve: planetField,
@@ -100,7 +100,7 @@ CharacterTC.addResolver({
   description: 'Update character',
 });
 
-CharacterTC.reorderFields(['name', 'planet']);
+CharacterTC.reorderFields(['id', 'name', 'planet', 'planetData']);
 
 const paginationOptions: PaginationResolverOpts = {
   perPage: environment.graphQL.pageSize,

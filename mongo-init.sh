@@ -40,13 +40,13 @@ db.episodes.insert([
 db.planets.insert([
   {
     name: "Alderan",
-    population: "2B",
+    population: 2000000000,
     ...commonData
   },
   {
     name: "Naboo",
     moons: 3,
-    population: "4.5B",
+    population: 4500000000",
     ...commonData
   },
 ]);
