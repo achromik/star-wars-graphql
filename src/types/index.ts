@@ -36,6 +36,8 @@ export interface CharacterDocument extends mongoose.Document {
   planetId: Id;
 }
 
+export type CharacterInput = { name: string; planetId?: Id };
+
 export interface PlanetDocument extends mongoose.Document {
   name: string;
 }

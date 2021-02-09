@@ -1,10 +1,17 @@
 import mongoose, { Schema } from 'mongoose';
-import { composeWithMongoose } from 'graphql-compose-mongoose';
+import { toInputObjectType } from 'graphql-compose';
+import {
+  composeMongoose,
+  PaginationResolverOpts,
+} from 'graphql-compose-mongoose';
 
-import { PlanetsTC, Planets } from './Planets';
+import { PlanetTC, Planet } from './Planets';
 import { CharacterDocument, TypeComposerOpts } from '../types';
 import { environment } from '../environment';
-import { addIdField } from '../utils/addIdField';
+import { idField } from '../resolvers/common/idField';
+import { createMutation } from '../resolvers/characters/createMutation';
+import { createCharacterValidationSchema } from '../validators/characterSchema';
+import { planetField } from '../resolvers/characters/planetField';
 
 const CharacterSchema: mongoose.Schema = new Schema(
   {
@@ -12,57 +19,111 @@ const CharacterSchema: mongoose.Schema = new Schema(
       type: String,
       required: true,
       trim: true,
+      description: "Character's name",
     },
     planetId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: Planets,
+      ref: Planet,
     },
   },
   { timestamps: true }
 );
 
-export const Characters = mongoose.model<CharacterDocument>(
-  'Characters',
+export const Character = mongoose.model<CharacterDocument>(
+  'Character',
   CharacterSchema,
   'characters'
 );
 
 const customizationOptions: TypeComposerOpts = {
   fields: {
-    remove: [...environment.removeFields, 'planetId', 'episodesIds'],
+    remove: [...environment.graphQL.removeFields, 'planetId'],
   },
 };
 
-const CharactersTC = composeWithMongoose(Characters, customizationOptions);
+const CharacterTC = composeMongoose(Character, customizationOptions);
 
-CharactersTC.addRelation('planetData', {
-  resolver: () => PlanetsTC.getResolver('findById'),
+const CreateCharacterInputObjectType = toInputObjectType(CharacterTC);
+
+CreateCharacterInputObjectType.addFields({
+  name: {
+    type: 'String!',
+    description: "Character's name",
+  },
+  planetId: {
+    type: 'MongoID',
+    description: 'Id of Planet',
+  },
+}).reorderFields(['id', 'name', 'planet', 'planetData']);
+
+CharacterTC.addRelation('planetData', {
+  resolver: () => PlanetTC.getResolver('findById'),
   prepareArgs: {
     _id: (source) => source.planetId,
   },
   projection: { planetId: true },
+  description: "Full Planet's data",
 });
 
-CharactersTC.addFields({
-  id: addIdField(),
+CharacterTC.addFields({
+  id: idField(),
   planet: {
     type: 'String',
-    resolve: async (source: CharacterDocument): Promise<string | null> => {
-      const { planetId }: CharacterDocument = await source
-        .populate('planetId')
-        .execPopulate();
-
-      if (planetId instanceof Planets) {
-        return planetId.name;
-      }
-
-      return null;
-    },
+    resolve: planetField,
     projection: { planetId: true },
+    description: "Planet's name",
   },
 });
 
+CharacterTC.addResolver({
+  name: 'create',
+  type: () => CharacterTC,
+  args: {
+    character: CreateCharacterInputObjectType,
+  },
+  resolve: createMutation,
+  extensions: {
+    validationSchema: createCharacterValidationSchema,
+  },
+  description: 'Create character',
+});
+
+CharacterTC.addResolver({
+  name: 'update',
+  type: () => CharacterTC,
+  args: {
+    character: CreateCharacterInputObjectType,
+  },
+  resolve: () => {
+    return 'to do';
+  },
+  description: 'Update character',
+});
+
+CharacterTC.reorderFields(['name', 'planet']);
+
+const paginationOptions: PaginationResolverOpts = {
+  perPage: environment.graphQL.pageSize,
+};
+
 export const characterQuery = {
-  getCharacterById: CharactersTC.getResolver('findById'),
-  getAllCharacters: CharactersTC.getResolver('findMany'),
+  getCharacterById: CharacterTC.mongooseResolvers
+    .findById()
+    .wrapResolve((next) => (rp) => {
+      rp.projection = { ...rp.projection, planetId: true };
+      return next(rp);
+    }),
+  getAllCharacters: CharacterTC.mongooseResolvers
+    .pagination(paginationOptions)
+    .wrapResolve((next) => (rp) => {
+      rp.projection = { ...rp.projection, planetId: true };
+      return next(rp);
+    }),
+};
+
+export const characterMutation = {
+  // characterCreateOne: CharacterTC.mongooseResolvers.createOne(),
+  // characterRemoveOne: CharacterTC.mongooseResolvers.removeOne(),
+  createCharacter: CharacterTC.getResolver('create'),
+  updateCharacter: CharacterTC.getResolver('update'),
 };

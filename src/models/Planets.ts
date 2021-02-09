@@ -3,7 +3,7 @@ import mongoose, { Schema } from 'mongoose';
 
 import { environment } from '../environment';
 import { PlanetDocument, TypeComposerOpts } from '../types';
-import { addIdField } from '../utils/addIdField';
+import { idField } from '../resolvers/common/idField';
 
 const planetSchema: mongoose.Schema = new Schema(
   {
@@ -16,24 +16,24 @@ const planetSchema: mongoose.Schema = new Schema(
   { timestamps: true }
 );
 
-export const Planets = mongoose.model<PlanetDocument>(
-  'Planets',
+export const Planet = mongoose.model<PlanetDocument>(
+  'Planet',
   planetSchema,
   'planets'
 );
 
 const customizationOptions: TypeComposerOpts = {
   fields: {
-    remove: [...environment.removeFields],
+    remove: [...environment.graphQL.removeFields],
   },
 };
-export const PlanetsTC = composeWithMongoose(Planets, customizationOptions);
+export const PlanetTC = composeWithMongoose(Planet, customizationOptions);
 
-PlanetsTC.addFields({
-  id: addIdField(),
+PlanetTC.addFields({
+  id: idField(),
 });
 
 export const planetQuery = {
-  planetById: PlanetsTC.getResolver('findById'),
-  getAllPlanets: PlanetsTC.getResolver('findMany'),
+  planetById: PlanetTC.getResolver('findById'),
+  getAllPlanets: PlanetTC.getResolver('findMany'),
 };
