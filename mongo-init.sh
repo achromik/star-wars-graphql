@@ -67,7 +67,7 @@ db.characters.insert([
 ]);
 
 var characters = db.characters.find();
-var charactersIds = character.map((item) => item._id);
+var charactersIds = characters.map((item) => item._id);
 
 db.episodes.insert([
   {
@@ -95,42 +95,6 @@ db.episodes.insert([
       charactersIds[5],
       charactersIds[6],
     ],
-    ...commonData,
-  },
-]);
-
-var episodes = db.episodes.find();
-
-var episodesIds = episodes.map((item) => item._id);
-
-db.characters.insert([
-  {
-    name: 'Luke Skywalker',
-    ...commonData,
-  },
-  {
-    name: 'Darth Vader',
-    ...commonData,
-  },
-  {
-    name: 'Han Solo',
-    ...commonData,
-  },
-  {
-    name: 'Leia Organa',
-    planetId: planetsIds[0],
-    ...commonData,
-  },
-  {
-    name: 'Wilhuff Tarkin',
-    ...commonData,
-  },
-  {
-    name: 'C-3PO',
-    ...commonData,
-  },
-  {
-    name: 'R2-D2',
     ...commonData,
   },
 ]);
