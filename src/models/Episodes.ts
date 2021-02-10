@@ -5,6 +5,10 @@ import {
 import mongoose, { Schema } from 'mongoose';
 
 import { environment } from '../environment';
+import {
+  getCharacterEpisodesQuery,
+  getCharacterEpisodesNameQuery,
+} from '../resolvers/episodes';
 import { EpisodeDocument, TypeComposerOpts } from '../types';
 import { Character, CharacterTC } from './Characters';
 
@@ -49,6 +53,24 @@ EpisodeTC.addRelation('characters', {
   projection: { charactersIds: true },
 });
 
+EpisodeTC.addResolver({
+  name: 'getCharacterEpisodes',
+  type: [EpisodeTC],
+  resolve: getCharacterEpisodesQuery,
+  args: {
+    id: 'MongoID!',
+  },
+});
+
+EpisodeTC.addResolver({
+  name: 'getCharacterEpisodesName',
+  type: '[String]',
+  resolve: getCharacterEpisodesNameQuery,
+  args: {
+    id: 'MongoID!',
+  },
+});
+
 const paginationOptions: PaginationResolverOpts = {
   perPage: environment.graphQL.pageSize,
 };
@@ -60,4 +82,5 @@ export const episodesQuery = {
       rp.projection = { ...rp.projection, charactersIds: true };
       return next(rp);
     }),
+  getCharacterEpisodes: EpisodeTC.getResolver('getCharacterEpisodes'),
 };
