@@ -1,12 +1,12 @@
 import { composeWithMongoose } from 'graphql-compose-mongoose';
 import mongoose, { Schema } from 'mongoose';
-import { abbreviateNumber } from 'js-abbreviation-number';
 
 import { environment } from '../environment';
 import { PlanetDocument, TypeComposerOpts } from '../types';
 import { idField } from '../resolvers/common/idField';
+import { populationAbbrevField, populationField } from '../resolvers/planets';
 
-const planetSchema: mongoose.Schema = new Schema(
+const planetSchema = new Schema(
   {
     name: {
       type: String,
@@ -40,15 +40,14 @@ export const PlanetTC = composeWithMongoose(Planet, customizationOptions);
 
 PlanetTC.addFields({
   id: idField<PlanetDocument>(),
-  population: {
+  populationAbbrev: {
     type: 'String',
-    resolve: (source: PlanetDocument) =>
-      abbreviateNumber(source.population ?? 0),
+    resolve: populationAbbrevField,
     description: 'Population as short string',
   },
-  populationValue: {
+  population: {
     type: 'Float',
-    resolve: (source: PlanetDocument) => source.population,
+    resolve: populationField,
     description: 'Population as number',
   },
 });
@@ -57,7 +56,7 @@ PlanetTC.reorderFields([
   'id',
   'name',
   'population',
-  'populationValue',
+  'populationAbbrev',
   'moons',
 ]);
 

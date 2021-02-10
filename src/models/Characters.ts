@@ -13,7 +13,7 @@ import { createMutation } from '../resolvers/characters/createMutation';
 import { createCharacterValidationSchema } from '../validators/characterSchema';
 import { planetField } from '../resolvers/characters/planetField';
 
-const CharacterSchema: mongoose.Schema = new Schema(
+const CharacterSchema = new Schema(
   {
     name: {
       type: String,
@@ -41,7 +41,7 @@ const customizationOptions: TypeComposerOpts = {
   },
 };
 
-const CharacterTC = composeMongoose(Character, customizationOptions);
+export const CharacterTC = composeMongoose(Character, customizationOptions);
 
 const CreateCharacterInputObjectType = toInputObjectType(CharacterTC);
 
@@ -122,8 +122,6 @@ export const characterQuery = {
 };
 
 export const characterMutation = {
-  // characterCreateOne: CharacterTC.mongooseResolvers.createOne(),
-  // characterRemoveOne: CharacterTC.mongooseResolvers.removeOne(),
   createCharacter: CharacterTC.getResolver('create'),
   updateCharacter: CharacterTC.getResolver('update'),
 };
