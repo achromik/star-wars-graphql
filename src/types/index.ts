@@ -64,6 +64,7 @@ export type TypeComposerOpts = {
 export type Context = {
   Character: mongoose.Model<CharacterDocument>;
   Planet: mongoose.Model<PlanetDocument>;
+  Episode: mongoose.Model<EpisodeDocument>;
 };
 
 export type MutationArgs = CharacterInput;
