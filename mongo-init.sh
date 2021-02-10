@@ -8,93 +8,130 @@ db.createCollection('characters', { capped: false });
 db.createCollection('planets', { capped: false });
 db.createCollection('episodes', { capped: false });
 
-var date = new Date()
+var date = new Date();
 
 var commonData = {
   createdAt: date,
   updatedAt: date,
-  __v: 0
-}
-
-db.episodes.insert([
-  {
-    name: "NEWHOPE",
-    fullName: "A New Hope",
-    episodeNo: 4,
-    ...commonData
-  },
-  {
-    name: "EMPIRE",
-    fullName: "The Empire Strikes Back",
-    episodeNo: 5,
-    ...commonData
-  },
-  {
-    name: "JEDI",
-    fullName: "Return of the Jedi",
-    episodeNo: 6,
-    ...commonData
-  },
-]);
+  __v: 0,
+};
 
 db.planets.insert([
   {
-    name: "Alderan",
+    name: 'Alderan',
     population: 2000000000,
-    ...commonData
+    ...commonData,
   },
   {
-    name: "Naboo",
+    name: 'Naboo',
     moons: 3,
-    population: 4500000000",
-    ...commonData
+    population: 4500000000,
+    ...commonData,
+  },
+]);
+
+var planets = db.planets.find();
+var planetsIds = planets.map((item) => item._id);
+
+db.characters.insert([
+  {
+    name: 'Luke Skywalker',
+    ...commonData,
+  },
+  {
+    name: 'Darth Vader',
+    ...commonData,
+  },
+  {
+    name: 'Han Solo',
+    ...commonData,
+  },
+  {
+    name: 'Leia Organa',
+    planetId: planetsIds[0],
+    ...commonData,
+  },
+  {
+    name: 'Wilhuff Tarkin',
+    planetId: planetsIds[1],
+    ...commonData,
+  },
+  {
+    name: 'C-3PO',
+    ...commonData,
+  },
+  {
+    name: 'R2-D2',
+    ...commonData,
+  },
+]);
+
+var characters = db.characters.find();
+var charactersIds = character.map((item) => item._id);
+
+db.episodes.insert([
+  {
+    name: 'NEWHOPE',
+    fullName: 'A New Hope',
+    episodeNo: 4,
+    charactersIds,
+    ...commonData,
+  },
+  {
+    name: 'EMPIRE',
+    fullName: 'The Empire Strikes Back',
+    episodeNo: 5,
+    charactersIds,
+    ...commonData,
+  },
+  {
+    name: 'JEDI',
+    fullName: 'Return of the Jedi',
+    episodeNo: 6,
+    charactersIds: [
+      charactersIds[0],
+      charactersIds[2],
+      charactersIds[4],
+      charactersIds[5],
+      charactersIds[6],
+    ],
+    ...commonData,
   },
 ]);
 
 var episodes = db.episodes.find();
 
-var planets = db.planets.find();
-
-var episodesIds = episodes.map(item => item._id)
-
-var planetsIds = planets.map(item => item._id)
+var episodesIds = episodes.map((item) => item._id);
 
 db.characters.insert([
   {
-    "name": "Luke Skywalker",
-    episodesIds,
-    ...commonData
+    name: 'Luke Skywalker',
+    ...commonData,
   },
   {
-    "name": "Darth Vader",
-    episodesIds,
-    ...commonData
+    name: 'Darth Vader',
+    ...commonData,
   },
   {
-    "name": "Han Solo",
-    episodesIds,
-    ...commonData
+    name: 'Han Solo',
+    ...commonData,
   },
   {
-    "name": "Leia Organa",
-    episodesIds,
-    "planetId": planetsIds[0],
-    ...commonData
+    name: 'Leia Organa',
+    planetId: planetsIds[0],
+    ...commonData,
   },
   {
-    "name": "Wilhuff Tarkin",
-    "episodesIds": [episodesIds[0]],
-    ...commonData
+    name: 'Wilhuff Tarkin',
+    ...commonData,
   },
   {
-    "name": "C-3PO",
-    episodesIds,
-    ...commonData
+    name: 'C-3PO',
+    ...commonData,
   },
   {
-    "name": "R2-D2",
-    episodesIds,
-    ...commonData
-  }
+    name: 'R2-D2',
+    ...commonData,
+  },
 ]);
 EOF

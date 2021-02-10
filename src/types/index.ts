@@ -42,6 +42,13 @@ export interface PlanetDocument extends mongoose.Document {
   moons: number;
 }
 
+export interface EpisodeDocument extends mongoose.Document {
+  name: string;
+  fullName: string;
+  episodeNo: number;
+  charactersIds: Id[];
+}
+
 export type CharacterInput = { name: string; planetId?: Id };
 
 export interface PlanetDocument extends mongoose.Document {
