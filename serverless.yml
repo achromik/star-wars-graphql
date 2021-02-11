@@ -1,0 +1,38 @@
+frameworkVersion: ^2.16.1
+service: star-wars-graphql
+provider:
+  name: aws
+  stage: dev
+  runtime: nodejs12.x
+  region: eu-central-1
+  apiGateway:
+    shouldStartNameWithService: true
+  apiKeys:
+    - name: lambdaApolloKey
+      value: ${env:APOLLO_LAMBDA_KEY}
+functions:
+  graphql:
+    handler: src/handler.main
+    events:
+      - http:
+          path: graphql
+          method: post
+          cors: true
+          private: ${self:custom.private.${self:custom.stage}}
+      - http:
+          path: graphql
+          method: get
+          cors: true
+          private: ${self:custom.private.${self:custom.stage}}
+plugins:
+  - serverless-webpack
+  - serverless-offline-dotenv
+  - serverless-offline
+  - serverless-dotenv-plugin
+custom:
+  webpack:
+    includeModules: true
+  stage: ${opt:stage, self:provider.stage}
+  private:
+    prod: false
+    dev: false
