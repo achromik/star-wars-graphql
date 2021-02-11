@@ -10,7 +10,7 @@
     "outDir": ".build",
     "preserveConstEnums": true,
     "rootDir": "./",
-    "target": "esnext",
+    "target": "es6",
     "removeComments": true,
     "skipLibCheck": true,
     "sourceMap": true,
