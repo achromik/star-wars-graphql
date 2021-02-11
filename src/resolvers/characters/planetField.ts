@@ -1,4 +1,4 @@
-import { Planet } from '../../models/Planets';
+import { Planet } from '../../models';
 import { CharacterDocument } from '../../types';
 
 export const planetField = async (

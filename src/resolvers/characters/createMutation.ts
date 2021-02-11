@@ -1,6 +1,6 @@
 import { ApolloError } from 'apollo-server-lambda';
 
-import { Character } from '../../models/Characters';
+import { Character } from '../../models';
 import { CharacterDocument, CharacterInput, Context } from '../../types';
 
 export const createMutation = async ({

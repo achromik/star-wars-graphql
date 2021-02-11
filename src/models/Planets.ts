@@ -59,8 +59,3 @@ PlanetTC.reorderFields([
   'populationAbbrev',
   'moons',
 ]);
-
-export const planetQuery = {
-  planetById: PlanetTC.getResolver('findById'),
-  getAllPlanets: PlanetTC.getResolver('findMany'),
-};

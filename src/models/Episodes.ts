@@ -1,7 +1,4 @@
-import {
-  composeMongoose,
-  PaginationResolverOpts,
-} from 'graphql-compose-mongoose';
+import { composeMongoose } from 'graphql-compose-mongoose';
 import mongoose, { Schema } from 'mongoose';
 
 import { environment } from '../environment';
@@ -73,17 +70,3 @@ EpisodeTC.addResolver({
   },
   projection: { planetId: true },
 });
-
-const paginationOptions: PaginationResolverOpts = {
-  perPage: environment.graphQL.pageSize,
-};
-
-export const episodesQuery = {
-  getAllEpisodes: EpisodeTC.mongooseResolvers
-    .pagination(paginationOptions)
-    .wrapResolve((next) => (rp) => {
-      rp.projection = { ...rp.projection, charactersIds: true, planetId: true };
-      return next(rp);
-    }),
-  getCharacterEpisodes: EpisodeTC.getResolver('getCharacterEpisodes'),
-};
