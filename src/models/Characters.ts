@@ -1,9 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import { schemaComposer, toInputObjectType } from 'graphql-compose';
-import {
-  composeMongoose,
-  PaginationResolverOpts,
-} from 'graphql-compose-mongoose';
+import { composeMongoose } from 'graphql-compose-mongoose';
 
 import { PlanetTC, Planet } from './Planets';
 import { CharacterDocument, TypeComposerOpts } from '../types';
@@ -146,32 +143,3 @@ CharacterTC.addResolver({
 });
 
 CharacterTC.reorderFields(['id', 'name', 'planet', 'planetData']);
-
-const paginationOptions: PaginationResolverOpts = {
-  perPage: environment.graphQL.pageSize,
-};
-
-export const characterQuery = {
-  getCharacterById: CharacterTC.mongooseResolvers
-    .findById()
-    .wrapResolve((next) => (rp) => {
-      rp.projection = { ...rp.projection, planetId: true };
-      return next(rp);
-    }),
-
-  getCharacters: CharacterTC.mongooseResolvers
-    .pagination(paginationOptions)
-    .wrapResolve((next) => (rp) => {
-      rp.projection = { ...rp.projection, planetId: true };
-      return next(rp);
-    })
-    .setDescription('Get Characters paginated'),
-
-  getAllCharacters: CharacterTC.getResolver('findManyFull'),
-};
-
-export const characterMutation = {
-  createCharacter: CharacterTC.getResolver('create'),
-  updateCharacter: CharacterTC.getResolver('update'),
-  deleteCharacter: CharacterTC.getResolver('delete'),
-};

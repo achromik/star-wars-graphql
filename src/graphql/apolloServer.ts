@@ -3,9 +3,7 @@ import { applyMiddleware } from 'graphql-middleware';
 
 import { environment } from '../environment';
 import { graphqlSchema } from './schema';
-import { Character } from '../models/Characters';
-import { Planet } from '../models/Planets';
-import { Episode } from '../models/Episodes';
+import { Character, Planet, Episode } from '../models';
 import { validationMiddleware } from '../middlewares/validationMiddleware';
 import { Context } from '../types';
 

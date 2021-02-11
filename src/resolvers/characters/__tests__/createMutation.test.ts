@@ -3,12 +3,10 @@ import { ObjectId } from 'mongodb';
 
 import { createMutation } from '../createMutation';
 import { CharacterDocument, Context } from '../../../types';
-import { Character } from '../../../models/Characters';
-import { Planet } from '../../../models/Planets';
-import { Episode } from '../../../models/Episodes';
+import { Character, Planet, Episode } from '../../../models';
 import { ApolloError } from 'apollo-server-lambda';
 
-describe('create character mutation', () => {
+describe('Create character mutation', () => {
   beforeEach(() => {
     mockingoose.resetAll();
   });

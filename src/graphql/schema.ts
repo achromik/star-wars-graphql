@@ -1,8 +1,7 @@
 import { SchemaComposer } from 'graphql-compose';
 
-import { characterQuery, characterMutation } from '../models/Characters';
-import { episodesQuery } from '../models/Episodes';
-import { planetQuery } from '../models/Planets';
+import { characterQuery, episodesQuery, planetQuery } from './queries/';
+import { characterMutation } from './mutations';
 
 const schemaComposer = new SchemaComposer();
 
