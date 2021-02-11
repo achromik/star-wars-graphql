@@ -28,6 +28,6 @@ export const createMutation = async ({
     }
   }
 
-  const user = new Character({ ...args.character });
-  return await user.save();
+  const newCharacter = new Character({ ...args.character });
+  return newCharacter.save();
 };
