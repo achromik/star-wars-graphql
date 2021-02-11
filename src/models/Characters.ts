@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import { toInputObjectType } from 'graphql-compose';
+import { schemaComposer, toInputObjectType } from 'graphql-compose';
 import {
   composeMongoose,
   PaginationResolverOpts,
@@ -9,9 +9,15 @@ import { PlanetTC, Planet } from './Planets';
 import { CharacterDocument, TypeComposerOpts } from '../types';
 import { environment } from '../environment';
 import { idField } from '../resolvers/common/idField';
-import { createMutation } from '../resolvers/characters/createMutation';
+import {
+  createMutation,
+  deleteMutation,
+  getAllQuery,
+  planetField,
+  updateMutation,
+} from '../resolvers/characters';
 import { createCharacterValidationSchema } from '../validators/characterSchema';
-import { planetField } from '../resolvers/characters/planetField';
+import { EpisodeTC } from './Episodes';
 
 const CharacterSchema = new Schema(
   {
@@ -43,9 +49,14 @@ const customizationOptions: TypeComposerOpts = {
 
 export const CharacterTC = composeMongoose(Character, customizationOptions);
 
-const CreateCharacterInputObjectType = toInputObjectType(CharacterTC);
+const CreateCharacterInputTC = toInputObjectType(CharacterTC);
 
-CreateCharacterInputObjectType.addFields({
+const UpdateCharacterInputTC = schemaComposer.createInputTC({
+  name: 'UpdateCharacterInput',
+  fields: { id: 'MongoID!', name: 'String', planetId: 'MongoID' },
+});
+
+CreateCharacterInputTC.addFields({
   name: {
     type: 'String!',
     description: "Character's name",
@@ -65,6 +76,21 @@ CharacterTC.addRelation('planetData', {
   description: "Full Planet's data",
 });
 
+CharacterTC.addRelation('episodes', {
+  resolver: EpisodeTC.getResolver('getCharacterEpisodesName'),
+  prepareArgs: {
+    id: (source) => source.id,
+  },
+});
+
+CharacterTC.addRelation('episodesData', {
+  resolver: EpisodeTC.getResolver('getCharacterEpisodes'),
+  prepareArgs: {
+    id: (source) => source.id,
+  },
+  projection: { planetId: true },
+});
+
 CharacterTC.addFields({
   id: idField<CharacterDocument>(),
   planet: {
@@ -79,7 +105,7 @@ CharacterTC.addResolver({
   name: 'create',
   type: () => CharacterTC,
   args: {
-    character: CreateCharacterInputObjectType,
+    character: CreateCharacterInputTC,
   },
   resolve: createMutation,
   extensions: {
@@ -92,12 +118,31 @@ CharacterTC.addResolver({
   name: 'update',
   type: () => CharacterTC,
   args: {
-    character: CreateCharacterInputObjectType,
+    character: UpdateCharacterInputTC,
   },
-  resolve: () => {
-    return 'to do';
-  },
+  resolve: updateMutation,
   description: 'Update character',
+});
+
+CharacterTC.addResolver({
+  name: 'findManyFull',
+  type: () =>
+    schemaComposer.createObjectTC({
+      name: 'Characters',
+      fields: { items: [CharacterTC] },
+    }),
+  resolve: getAllQuery,
+  projection: { planetID: true },
+  description: 'Get list of all characters (w/o pagination)',
+});
+
+CharacterTC.addResolver({
+  name: 'delete',
+  type: CharacterTC,
+  resolve: deleteMutation,
+  args: {
+    id: 'String',
+  },
 });
 
 CharacterTC.reorderFields(['id', 'name', 'planet', 'planetData']);
@@ -113,15 +158,20 @@ export const characterQuery = {
       rp.projection = { ...rp.projection, planetId: true };
       return next(rp);
     }),
-  getAllCharacters: CharacterTC.mongooseResolvers
+
+  getCharacters: CharacterTC.mongooseResolvers
     .pagination(paginationOptions)
     .wrapResolve((next) => (rp) => {
       rp.projection = { ...rp.projection, planetId: true };
       return next(rp);
-    }),
+    })
+    .setDescription('Get Characters paginated'),
+
+  getAllCharacters: CharacterTC.getResolver('findManyFull'),
 };
 
 export const characterMutation = {
   createCharacter: CharacterTC.getResolver('create'),
   updateCharacter: CharacterTC.getResolver('update'),
+  deleteCharacter: CharacterTC.getResolver('delete'),
 };

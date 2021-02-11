@@ -50,6 +50,7 @@ export interface EpisodeDocument extends mongoose.Document {
 }
 
 export type CharacterInput = { name: string; planetId?: Id };
+export type UpdateCharacterInput = { id: Id; name?: string; planetId?: Id };
 
 export interface PlanetDocument extends mongoose.Document {
   name: string;

@@ -9,7 +9,9 @@ export const getCharacterEpisodesQuery = async ({
 }): Promise<EpisodeDocument[]> => {
   return context.Episode.find({
     charactersIds: { $elemMatch: { $eq: args.id } },
-  }).exec();
+  })
+    .populate('characterIds')
+    .exec();
 };
 
 export const getCharacterEpisodesNameQuery = async ({

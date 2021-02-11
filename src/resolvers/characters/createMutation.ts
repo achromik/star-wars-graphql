@@ -20,10 +20,12 @@ export const createMutation = async ({
     throw new ApolloError('User already exists!');
   }
 
-  const planetResponse = await context.Planet.findById(character.planetId);
+  if (character.planetId) {
+    const planetResponse = await context.Planet.findById(character.planetId);
 
-  if (planetResponse === null) {
-    throw new ApolloError('No matching planet with provided id');
+    if (planetResponse === null) {
+      throw new ApolloError('No matching planet with provided id');
+    }
   }
 
   const user = new Character({ ...args.character });

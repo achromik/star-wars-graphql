@@ -8,6 +8,7 @@ import { environment } from '../environment';
 import {
   getCharacterEpisodesQuery,
   getCharacterEpisodesNameQuery,
+  charactersField,
 } from '../resolvers/episodes';
 import { EpisodeDocument, TypeComposerOpts } from '../types';
 import { Character, CharacterTC } from './Characters';
@@ -45,12 +46,12 @@ const customizationOptions: TypeComposerOpts = {
 
 export const EpisodeTC = composeMongoose(Episode, customizationOptions);
 
-EpisodeTC.addRelation('characters', {
-  resolver: () => CharacterTC.mongooseResolvers.findByIds(),
-  prepareArgs: {
-    _ids: (source) => source.charactersIds,
+EpisodeTC.addFields({
+  characters: {
+    type: () => [CharacterTC],
+    resolve: charactersField,
+    projection: { charactersIds: true, planetId: true },
   },
-  projection: { charactersIds: true },
 });
 
 EpisodeTC.addResolver({
@@ -60,6 +61,7 @@ EpisodeTC.addResolver({
   args: {
     id: 'MongoID!',
   },
+  projection: { planetId: true },
 });
 
 EpisodeTC.addResolver({
@@ -69,6 +71,7 @@ EpisodeTC.addResolver({
   args: {
     id: 'MongoID!',
   },
+  projection: { planetId: true },
 });
 
 const paginationOptions: PaginationResolverOpts = {
@@ -79,7 +82,7 @@ export const episodesQuery = {
   getAllEpisodes: EpisodeTC.mongooseResolvers
     .pagination(paginationOptions)
     .wrapResolve((next) => (rp) => {
-      rp.projection = { ...rp.projection, charactersIds: true };
+      rp.projection = { ...rp.projection, charactersIds: true, planetId: true };
       return next(rp);
     }),
   getCharacterEpisodes: EpisodeTC.getResolver('getCharacterEpisodes'),
